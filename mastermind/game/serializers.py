@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Game
+from .models import Game, Round
 
 
 class GameListSerializer(serializers.HyperlinkedModelSerializer):
@@ -21,3 +21,12 @@ class GameDetailSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Game
         fields = ('url', 'id', 'code', 'rounds', 'ended', 'won', 'rounds',)
+
+
+class RoundDetailSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="round-detail", )
+    game = serializers.HyperlinkedRelatedField(read_only=True, view_name="game-detail", )
+
+    class Meta:
+        model = Round
+        fields = ('url', 'id', 'game', 'code', 'black_pegs', 'white_pegs',)
