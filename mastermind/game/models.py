@@ -11,13 +11,24 @@ COLORS = (
 
 
 class Game(models.Model):
-    code = ArrayField(models.CharField(max_length=1, choices=COLORS), max_length=4)
+    # Fields
+    code = ArrayField(models.CharField(max_length=1, choices=COLORS), size=4)
     ended = models.BooleanField(default=False)
     won = models.BooleanField(default=False)
 
+    # Functions
+    @property
+    def round_count(self):
+        return self.rounds.all().count()
+
 
 class Round(models.Model):
-    group = models.ForeignKey(Game, on_delete=models.CASCADE)
-    code = ArrayField(models.CharField(max_length=1, choices=COLORS), max_length=4)
+    # Relations
+    game = models.ForeignKey(Game,
+                             related_name="rounds",
+                             verbose_name=u"Game", on_delete=models.CASCADE)
+
+    # Fields
+    code = ArrayField(models.CharField(max_length=1, choices=COLORS), size=4)
     black_pegs = models.IntegerField(null=True)
     white_pegs = models.IntegerField(null=True)
