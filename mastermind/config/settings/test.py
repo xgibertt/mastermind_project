@@ -14,3 +14,12 @@ DATABASES = {
         'PORT': 5432,
     }
 }
+
+INSTALLED_APPS += ('django_nose', )
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+NOSE_ARGS = [
+    '--cover-erase',
+    '--cover-package=game',
+]

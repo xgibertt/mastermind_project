@@ -1,25 +1,10 @@
-from django.test import TestCase
-from .models import Game, Round
-
-from faker import Faker
-from faker.providers import BaseProvider
+from ..models import Game, Round
+from .test_base import BaseTestCase
 
 
-class FakerProvider(BaseProvider):
-    def code(self):
-        return self.random_sample(elements=('R', 'B', 'G', 'Y'), length=4)
-
-    def peg(self):
-        return self.random_element(elements=(0, 1, 2, 3, 4))
-
-    def boolean(self):
-        return self.random_element(elements=(True, False))
-
-
-class GameTest(TestCase):
+class GameTest(BaseTestCase):
     def setUp(self):
-        self.fake = Faker()
-        self.fake.add_provider(FakerProvider)
+        super(GameTest, self).setUp()
 
         # random inputs
         self.expected_code = self.fake.code()
@@ -71,10 +56,9 @@ class GameTest(TestCase):
         self.assertEqual(expected.won, game.won)
 
 
-class RoundTest(TestCase):
+class RoundTest(BaseTestCase):
     def setUp(self):
-        self.fake = Faker()
-        self.fake.add_provider(FakerProvider)
+        super(RoundTest, self).setUp()
 
         # random inputs
         self.expected_code = self.fake.code()
