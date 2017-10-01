@@ -9,17 +9,25 @@ COLORS = (
     ('Y', 'YELLOW'),
 )
 
+COLORS_REVERSE = {v: k for k, v in COLORS}
+
+AVAILABLE_ROUNDS = [12, 10, 8, 6]
+
 
 class Game(models.Model):
     # Fields
     code = ArrayField(models.CharField(max_length=1, choices=COLORS), size=4)
-    ended = models.BooleanField(default=False)
+    n_rounds = models.IntegerField()
     won = models.BooleanField(default=False)
 
     # Functions
     @property
     def round_count(self):
         return self.rounds.all().count()
+
+    @property
+    def ended(self):
+        return self.won or self.round_count == self.n_rounds
 
 
 class Round(models.Model):
@@ -30,5 +38,5 @@ class Round(models.Model):
 
     # Fields
     code = ArrayField(models.CharField(max_length=1, choices=COLORS), size=4)
-    black_pegs = models.IntegerField(null=True)
-    white_pegs = models.IntegerField(null=True)
+    black_pegs = models.IntegerField()
+    white_pegs = models.IntegerField()

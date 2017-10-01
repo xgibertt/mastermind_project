@@ -9,8 +9,14 @@ class FakerProvider(BaseProvider):
     def code(self):
         return self.random_sample(elements=('R', 'B', 'G', 'Y'), length=4)
 
+    def serialized_code(self):
+        return self.random_sample(elements=('RED', 'BLUE', 'GREEN', 'YELLOW'), length=4)
+
     def peg(self):
         return self.random_element(elements=(0, 1, 2, 3, 4))
+
+    def n_rounds(self):
+        return self.random_element(elements=(12, 10, 8, 6))
 
     def boolean(self):
         return self.random_element(elements=(True, False))

@@ -14,8 +14,8 @@ class GameTest(BaseTestCase):
         self._superuser_login()
 
         # input
-        expected = {"code": self.fake.code(),
-                    "ended": self.fake.boolean(),
+        expected = {"code": self.fake.serialized_code(),
+                    "n_rounds": self.fake.n_rounds(),
                     "won": self.fake.boolean()}
         response = self.client.post(self.url, expected, format='json')
 
@@ -26,9 +26,10 @@ class GameTest(BaseTestCase):
         p_id = self._get_id_by_url(response.data.get('url'))
         game = Game.objects.get(pk=p_id)
 
+        self.assertEqual([c[0] for c in expected["code"]], game.code)
         self.assertIsNotNone(game.pk)
-        self.assertEqual(expected["code"], game.code)
-        self.assertEqual(expected["ended"], game.ended)
+        self.assertEqual(expected["n_rounds"], game.n_rounds)
+        self.assertEqual(game.won, game.ended)
         self.assertEqual(expected["won"], game.won)
 
     def test_should_get_game_list(self):
@@ -36,7 +37,7 @@ class GameTest(BaseTestCase):
 
         # input
         Game.objects.create(code=self.fake.code(),
-                            ended=self.fake.boolean(),
+                            n_rounds=self.fake.n_rounds(),
                             won=self.fake.boolean())
 
         response = self.client.get(self.url, format='json')
@@ -50,7 +51,7 @@ class GameTest(BaseTestCase):
 
         # input
         expected = Game.objects.create(code=self.fake.code(),
-                                       ended=self.fake.boolean(),
+                                       n_rounds=self.fake.n_rounds(),
                                        won=self.fake.boolean())
 
         response = self.client.get(reverse('game-detail',
@@ -61,7 +62,9 @@ class GameTest(BaseTestCase):
         self.assertEquals(response.status_code, status.HTTP_200_OK)
 
         # Check inserted game properties
-        self.assertEqual(expected.code, response.data["code"])
+        self.assertEqual(expected.pk, response.data["id"])
+        self.assertEqual(expected.code, [c[0] for c in response.data["code"]])
+        self.assertEqual(expected.n_rounds, response.data["n_rounds"])
         self.assertEqual(expected.ended, response.data["ended"])
         self.assertEqual(expected.won, response.data["won"])
 
@@ -71,7 +74,7 @@ class RoundTest(BaseTestCase):
     def setUp(self):
         super(RoundTest, self).setUp()
         self.game = Game.objects.create(code=self.fake.code(),
-                                        ended=self.fake.boolean(),
+                                        n_rounds=self.fake.n_rounds(),
                                         won=self.fake.boolean())
         self.url = reverse('round-list', kwargs={'pk': self.game.pk})
 
@@ -79,7 +82,7 @@ class RoundTest(BaseTestCase):
         self._superuser_login()
 
         # input
-        expected = {"code": self.fake.code(),
+        expected = {"code": self.fake.serialized_code(),
                     "black_pegs": self.fake.peg(),
                     "white_pegs": self.fake.peg()}
         response = self.client.post(self.url, expected, format='json')
@@ -92,7 +95,7 @@ class RoundTest(BaseTestCase):
         round = Round.objects.get(pk=p_id)
 
         self.assertIsNotNone(round.pk)
-        self.assertEqual(expected["code"], round.code)
+        self.assertEqual([c[0] for c in expected["code"]], round.code)
         self.assertEqual(expected["black_pegs"], round.black_pegs)
         self.assertEqual(expected["white_pegs"], round.white_pegs)
         self.assertEqual(self.game, round.game)
@@ -129,9 +132,7 @@ class RoundTest(BaseTestCase):
         self.assertEquals(response.status_code, status.HTTP_200_OK)
 
         # Check inserted round properties
-        # import pdb;
-        # pdb.set_trace()
-        self.assertEqual(expected.code, response.data["code"])
+        self.assertEqual(expected.code, [c[0] for c in response.data["code"]])
         self.assertEqual(expected.black_pegs, response.data["black_pegs"])
         self.assertEqual(expected.white_pegs, response.data["white_pegs"])
         self.assertEqual(self.game.pk, self._get_id_by_url(response.data.get('game')))
