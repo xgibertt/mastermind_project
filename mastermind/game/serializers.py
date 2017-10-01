@@ -9,7 +9,7 @@ class GameListSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Game
-        fields = ('url', 'id', 'code', 'round_count', 'ended', 'won',)
+        fields = ('url', 'id', 'code', 'ended', 'won', 'round_count')
 
 
 class GameDetailSerializer(serializers.HyperlinkedModelSerializer):
@@ -20,7 +20,7 @@ class GameDetailSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Game
-        fields = ('url', 'id', 'code', 'rounds', 'ended', 'won', 'rounds',)
+        fields = ('url', 'id', 'code', 'ended', 'won', 'rounds',)
 
 
 class RoundDetailSerializer(serializers.HyperlinkedModelSerializer):

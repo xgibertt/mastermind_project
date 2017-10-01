@@ -28,10 +28,13 @@ class RoundList(generics.ListCreateAPIView):
         game_pk = self.kwargs['pk']
         return Round.objects.filter(game__pk=game_pk)
 
+    def perform_create(self, serializer):
+        serializer.save(game_id=self.kwargs['pk'])
+
     serializer_class = RoundDetailSerializer
 
 
-class RoundDetail(generics.ListCreateAPIView):
+class RoundDetail(generics.RetrieveAPIView):
     """
     API endpoint that allows game to be viewed or created.
     """
