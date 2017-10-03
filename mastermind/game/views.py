@@ -29,6 +29,9 @@ class RoundList(generics.ListCreateAPIView):
         return Round.objects.filter(game__pk=game_pk)
 
     def perform_create(self, serializer):
+        if Game.objects.get(pk=self.kwargs['pk']).ended:
+            raise serializers.ValidationError("You cannot play anymore, this game is already ended")
+
         serializer.save(game_id=self.kwargs['pk'])
 
     serializer_class = RoundDetailSerializer

@@ -43,6 +43,14 @@ class Round(models.Model):
     white_pegs = models.IntegerField()
 
     # Functions
+    @property
+    def ended(self):
+        return self.game.ended
+
+    @property
+    def won(self):
+        return self.game.won
+
     def save(self, *args, **kwargs):
         if self.code == self.game.code:
             self.game.won = True
