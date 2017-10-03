@@ -42,6 +42,8 @@ class RoundDetailSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="round-detail", )
     game = serializers.HyperlinkedRelatedField(read_only=True, view_name="game-detail", )
     code = CodeField()
+    black_pegs = serializers.ReadOnlyField()
+    white_pegs = serializers.ReadOnlyField()
 
     class Meta:
         model = Round
