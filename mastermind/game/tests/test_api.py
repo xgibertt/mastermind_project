@@ -11,8 +11,6 @@ class GameTest(BaseTestCase):
         self.url = reverse('game-list')
 
     def test_should_create_new_game(self):
-        self._superuser_login()
-
         # input
         expected = {"code": self.fake.serialized_code(),
                     "n_rounds": self.fake.n_rounds()}
@@ -33,8 +31,6 @@ class GameTest(BaseTestCase):
         self.assertEqual(data["won"], game.won)
 
     def test_should_get_game_list(self):
-        self._superuser_login()
-
         # input
         Game.objects.create(code=self.fake.code(),
                             n_rounds=self.fake.n_rounds())
@@ -46,8 +42,6 @@ class GameTest(BaseTestCase):
         self.assertTrue(1 >= response.data["count"])
 
     def test_should_get_game_detail(self):
-        self._superuser_login()
-
         # input
         expected = Game.objects.create(code=self.fake.code(),
                                        n_rounds=self.fake.n_rounds(),
@@ -77,8 +71,6 @@ class RoundTest(BaseTestCase):
         self.url = reverse('round-list', kwargs={'pk': self.game.pk})
 
     def test_should_create_new_round(self):
-        self._superuser_login()
-
         # input
         expected = {"code": self.fake.serialized_code()}
         response = self.client.post(self.url, expected, format='json')
@@ -97,8 +89,6 @@ class RoundTest(BaseTestCase):
         self.assertEqual(self.game, round.game)
 
     def test_should_get_round_list(self):
-        self._superuser_login()
-
         # input
         Round.objects.create(code=self.fake.code(),
                              black_pegs=self.fake.peg(),
@@ -112,8 +102,6 @@ class RoundTest(BaseTestCase):
         self.assertTrue(1 >= response.data["count"])
 
     def test_should_get_round_detail(self):
-        self._superuser_login()
-
         # input
         expected = Round.objects.create(code=self.fake.code(),
                                         game=self.game)
@@ -134,8 +122,6 @@ class RoundTest(BaseTestCase):
         self.assertEqual(self.game.pk, self._get_id_by_url(data['game']))
 
     def test_should_get_a_400_error_inserting_new_round_when_game_is_ended(self):
-        self._superuser_login()
-
         # input
         code = [c for c in map(lambda c: dict(COLORS)[c], self.game.code)]
         self.client.post(self.url, {"code": code}, format='json')

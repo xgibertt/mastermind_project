@@ -14,7 +14,7 @@ class GameList(generics.ListCreateAPIView):
 
 class GameDetail(generics.RetrieveAPIView):
     """
-    API endpoint that allows game to be viewed or created.
+    API endpoint that allows game to be viewed.
     """
     queryset = Game.objects.all()
     serializer_class = GameDetailSerializer
@@ -22,7 +22,7 @@ class GameDetail(generics.RetrieveAPIView):
 
 class RoundList(generics.ListCreateAPIView):
     """
-    API endpoint that allows game to be viewed or created.
+    API endpoint that allows round game to be viewed or created.
     """
     def get_queryset(self):
         game_pk = self.kwargs['pk']
@@ -39,7 +39,7 @@ class RoundList(generics.ListCreateAPIView):
 
 class RoundDetail(generics.RetrieveAPIView):
     """
-    API endpoint that allows game to be viewed or created.
+    API endpoint that allows round game to be viewed.
     """
     queryset = Round.objects.all()
     serializer_class = RoundDetailSerializer
