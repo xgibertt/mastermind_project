@@ -1,4 +1,4 @@
-"""Production settings and globals."""
+"""Production settings"""
 from .base import *
 
 DEBUG = False

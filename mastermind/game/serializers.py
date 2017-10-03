@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Game, Round, COLORS, COLORS_REVERSE
+from .models import Game, Round, COLORS, COLORS_VALUES
 
 
 class CodeField(serializers.Field):
@@ -11,7 +11,7 @@ class CodeField(serializers.Field):
         return [c for c in map(lambda c: dict(COLORS)[c], obj)]
 
     def to_internal_value(self, data):
-        return [c for c in map(lambda c: COLORS_REVERSE[c], data)]
+        return [c for c in map(lambda c: COLORS_VALUES[c], data)]
 
 
 class GameListSerializer(serializers.HyperlinkedModelSerializer):
